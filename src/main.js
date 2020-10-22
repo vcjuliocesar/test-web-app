@@ -1,12 +1,14 @@
 import Vue from 'vue'
 import App from './App.vue'
 import VueRouter from 'vue-router';
+import VueGoogleCharts from 'vue-google-charts'
 import Home from './components/Home.vue';
 import Login from './components/auth/Login.vue';
 import Signup from './components/auth/Signup.vue';
 
 Vue.config.productionTip = false
 Vue.use(VueRouter);
+Vue.use(VueGoogleCharts);
 
 const routes = [
   {path:'/',name:'home',component:Home},
