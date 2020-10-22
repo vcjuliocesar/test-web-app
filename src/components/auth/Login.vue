@@ -16,7 +16,7 @@
         id="pass"
         class="btn"
       />
-      <button type="submit">Sing In<button>
+      <button type="submit">Sing In</button>
     </form>
   </div>
 </template>
