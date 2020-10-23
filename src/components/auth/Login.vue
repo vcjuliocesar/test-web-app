@@ -1,6 +1,6 @@
 <template>
   <div id="login">
-    <form>
+    <form @submit.prevent="Login()">
       <h1>Sign In</h1>
       <div class="form-group">
         <label for="email">Email</label>
@@ -10,6 +10,7 @@
           name="email"
           id="email"
           class="form-control"
+          v-model="user.email"
         />
       </div>
       <div class="form-group">
@@ -20,6 +21,7 @@
           name="pass"
           id="pass"
           class="form-control"
+          v-model="user.pass"
         />
       </div>
       <div class="form-group">
@@ -31,7 +33,30 @@
 </template>
 
 <script>
+import firebase from "firebase";
 export default {
   name: "Login",
+  data() {
+    return {
+      user: {
+        email: "",
+        pass: "",
+      },
+    };
+  },
+  methods: {
+    Login: function() {
+      firebase
+        .auth()
+        .signInWithEmailAndPassword(this.user.email, this.user.pass)
+        .then(() => {
+          this.$router.replace("home");
+          this.user.email = "";
+          this.user.pass = "";
+        },(err)=>{
+          console.log(err.message);
+        });
+    },
+  },
 };
 </script>

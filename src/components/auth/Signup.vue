@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import firebase from 'firebase';
+import firebase from "firebase";
 export default {
   name: "Signup",
   data() {
@@ -47,17 +47,21 @@ export default {
     };
   },
   methods: {
-    SignUp:function(){
-      firebase.auth().createUserWithEmailAndPassword(this.user.email,this.user.pass).then(
-        ()=>{
-          this.$router.replace('home');
-          console.log("usuario creado");
-        },
-        (err)=>{
-          console.log(err.message)
-        }
-      )
-    }
+    SignUp: function() {
+      firebase
+        .auth()
+        .createUserWithEmailAndPassword(this.user.email, this.user.pass)
+        .then(
+          () => {
+            this.$router.replace("home");
+            this.user.email = "";
+            this.user.pass = "";
+          },
+          (err) => {
+            console.log(err.message);
+          }
+        );
+    },
   },
 };
 </script>
