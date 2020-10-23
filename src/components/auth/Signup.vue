@@ -50,7 +50,7 @@ export default {
     SignUp:function(){
       firebase.auth().createUserWithEmailAndPassword(this.user.email,this.user.pass).then(
         ()=>{
-          //this.$router.push('/login');
+          this.$router.replace('home');
           console.log("usuario creado");
         },
         (err)=>{
