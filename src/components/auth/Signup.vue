@@ -13,6 +13,7 @@
             class="form-control"
             v-model="user.email"
           />
+          <span class="error">{{ errors.email }}</span>
         </div>
         <div class="form-group">
           <label for="password">Password</label>
@@ -24,6 +25,7 @@
             class="form-control"
             v-model="user.pass"
           />
+           <span class="error">{{ errors.pass }}</span>
         </div>
         <div class="form-group">
           <button type="submit" class="btn btn-primary">Enviar</button>
@@ -44,6 +46,10 @@ export default {
         email: "",
         pass: "",
       },
+      errors: {
+        email: "",
+        pass: "",
+      },
     };
   },
   methods: {
@@ -58,7 +64,14 @@ export default {
             this.user.pass = "";
           },
           (err) => {
-            console.log(err.message);
+            if (err.code === "auth/invalid-email") {
+              this.errors.email = err.message;
+            }
+
+            if (err.code === "auth/weak-password") {
+              this.errors.pass = err.message;
+            }
+            console.log(err);
           }
         );
     },

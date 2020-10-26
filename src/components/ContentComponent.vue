@@ -1,37 +1,57 @@
 <template>
   <section class="wrap">
     <div id="chart_div">
-      <GChart
-        type="chartType"
-        :settings="{ packages: ['bar'] }"
-        :data="chartData"
-        :options="chartOptions"
-        :createChart="(el, google) => new google.charts.Bar(el)"
-      />
+      <GChart type="BarChart" :data="chartData" :options="chartOptions" />
     </div>
   </section>
 </template>
 
 <script>
+import { db } from "../firebaseDB";
+let questionsRef = db.ref("questions").orderByKey().limitToFirst(5);
+let answersRef = db.ref("answers");
 export default {
   name: "ContentComponent",
   data() {
     return {
-      chartData: [
-        ["Year", "Sales", "Expenses", "Profit"],
-        ["2014", 1000, 400, 200],
-        ["2015", 1170, 460, 250],
-        ["2016", 660, 1120, 300],
-        ["2017", 1030, 540, 350],
-      ],
+      chartData: [["questions", "Aciertos","Errores"]],
       chartOptions: {
-        chart: {
-          title: "Company Performance",
-          subtitle: "Sales, Expenses, and Profit: 2014-2017",
+        title: "Aciertos y Errores por Pregunta",
+        chartArea: { width: "80%" },
+        isStacked: true,
+        hAxis: {
+          title: "Aciertos / Errores",
+          minValue: 0,
         },
-         bars: 'horizontal'
+        vAxis: {
+          title: "Pregunta",
+        },
       },
     };
+  },
+  mounted() {
+    questionsRef.once("value", (snapshot) => {
+      snapshot.forEach((childsnapshot) => {
+        let questionId = parseInt(childsnapshot.key);
+        let aciertos=0;
+        let errores=0;
+        answersRef
+          .orderByChild("questionId")
+          .equalTo(questionId)
+          .once("value", (mediaSnap) => {
+            mediaSnap.forEach((childMediaSnap) => {
+        
+              if(childMediaSnap.val().right){
+                  aciertos++;
+              }else{
+                  errores++;
+              }
+            
+              this.chartData.push([questionId,aciertos, errores]);
+            });
+          });
+      });
+    });
   },
 };
 </script>
